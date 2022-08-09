@@ -47,4 +47,4 @@ async function seed() {
 }
 
 seed();
-// This auto fills the application with a Post and comments. Its in package.json under the prisma name as seed. // Should delete later
+// Fills the database to test code. [npx prisma db seed]. Its in package.json under the prisma name as seed. // Should delete later
