@@ -4,7 +4,7 @@ import { usePost } from '../contexts/PostContext';
 import { CommentList } from './CommentList';
 import { useState } from 'react';
 import { CommentForm } from './CommentForm';
-import { createComment, deleteComment, updateComment } from '../services/comments';
+import { createComment, deleteComment, toggleCommentLike, updateComment } from '../services/comments';
 import { useAsyncFn } from '../hooks/useAsync';
 import { useUser } from '../hooks/useUser';
 
@@ -14,10 +14,11 @@ export function Comment({ id, message, user, createdAt, likeCount, likedByMe }) 
 	const [areChildrenHidden, setAreChildrenHidden] = useState(false);
 	const [isReplying, setIsReplying] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
-	const { post, getReplies, createLocalComment, updateLocalComment, deleteLocalComment } = usePost();
+	const { post, getReplies, createLocalComment, updateLocalComment, deleteLocalComment, toggleLocalCommentLike } = usePost();
 	const createCommentFn = useAsyncFn(createComment);
 	const updateCommentFn = useAsyncFn(updateComment);
 	const deleteCommentFn = useAsyncFn(deleteComment);
+	const toggleCommentLikeFn = useAsyncFn(toggleCommentLike);
 	const childComments = getReplies(id);
 	const currentUser = useUser();
 
@@ -39,6 +40,10 @@ export function Comment({ id, message, user, createdAt, likeCount, likedByMe }) 
 		return deleteCommentFn.execute({ postId: post.id, id }).then((comment) => deleteLocalComment(comment.id));
 	}
 
+	function onToggleCommentLike() {
+		return toggleCommentLikeFn.execute({ id, postId: post.id }).then(({ addLike }) => toggleLocalCommentLike(id, addLike));
+	}
+
 	return (
 		<>
 			<div className='comment'>
@@ -52,7 +57,12 @@ export function Comment({ id, message, user, createdAt, likeCount, likedByMe }) 
 					<div className='message'>{message}</div>
 				)}
 				<div className='footer'>
-					<IconBtn Icon={likedByMe ? FaHeart : FaRegHeart} aria-label={likedByMe ? 'Unlike' : 'Like'}>
+					<IconBtn
+						onClick={onToggleCommentLike}
+						disabled={toggleCommentLikeFn.loading}
+						Icon={likedByMe ? FaHeart : FaRegHeart}
+						aria-label={likedByMe ? 'Unlike' : 'Like'}
+					>
 						{likeCount}
 					</IconBtn>
 					<IconBtn
