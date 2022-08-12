@@ -1,5 +1,5 @@
 import { IconBtn } from './IconBtn';
-import { FaHeart, FaReply, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaHeart, FaReply, FaEdit, FaTrash, FaRegHeart } from 'react-icons/fa';
 import { usePost } from '../contexts/PostContext';
 import { CommentList } from './CommentList';
 import { useState } from 'react';
@@ -10,7 +10,7 @@ import { useUser } from '../hooks/useUser';
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
-export function Comment({ id, message, user, createdAt }) {
+export function Comment({ id, message, user, createdAt, likeCount, likedByMe }) {
 	const [areChildrenHidden, setAreChildrenHidden] = useState(false);
 	const [isReplying, setIsReplying] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
@@ -52,8 +52,8 @@ export function Comment({ id, message, user, createdAt }) {
 					<div className='message'>{message}</div>
 				)}
 				<div className='footer'>
-					<IconBtn Icon={FaHeart} aria-label='like'>
-						2
+					<IconBtn Icon={likedByMe ? FaHeart : FaRegHeart} aria-label={likedByMe ? 'Unlike' : 'Like'}>
+						{likeCount}
 					</IconBtn>
 					<IconBtn
 						onClick={() => setIsReplying((prev) => !prev)}
