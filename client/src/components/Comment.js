@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { CommentForm } from './CommentForm';
 import { createComment, deleteComment, updateComment } from '../services/comments';
 import { useAsyncFn } from '../hooks/useAsync';
+import { useUser } from '../hooks/useUser';
 
 const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
@@ -17,8 +18,8 @@ export function Comment({ id, message, user, createdAt }) {
 	const createCommentFn = useAsyncFn(createComment);
 	const updateCommentFn = useAsyncFn(updateComment);
 	const deleteCommentFn = useAsyncFn(deleteComment);
-
 	const childComments = getReplies(id);
+	const currentUser = useUser();
 
 	function onCommentReply(message) {
 		return createCommentFn.execute({ postId: post.id, message, parentId: id }).then((comment) => {
@@ -60,9 +61,19 @@ export function Comment({ id, message, user, createdAt }) {
 						isActive={isReplying}
 						aria-label={isReplying ? 'Cancel Reply' : 'Reply'}
 					/>
-					<IconBtn onClick={() => setIsEditing((prev) => !prev)} Icon={FaEdit} isActive={isEditing} aria-label={isEditing ? 'Cancel Edit' : 'Edit'} />
-					<IconBtn disabled={deleteCommentFn.loading} onClick={onCommentDelete} Icon={FaTrash} aria-label='Delete' color='danger' />
+					{user.id === currentUser.id && (
+						<>
+							<IconBtn
+								onClick={() => setIsEditing((prev) => !prev)}
+								Icon={FaEdit}
+								isActive={isEditing}
+								aria-label={isEditing ? 'Cancel Edit' : 'Edit'}
+							/>
+							<IconBtn disabled={deleteCommentFn.loading} onClick={onCommentDelete} Icon={FaTrash} aria-label='Delete' color='danger' />
+						</>
+					)}
 				</div>
+				{deleteCommentFn.error && <div className='error-msg mt-1'>{deleteCommentFn.error}</div>}
 			</div>
 			{isReplying && (
 				<div className='mt-1 ml-3'>
