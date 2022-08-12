@@ -11,7 +11,7 @@ export function PostList() {
 	return posts.map((post) => {
 		return (
 			<h1 key={post.id}>
-				<Link href={`/posts/${post.id}`}>{post.title}</Link>
+				<Link to={`/posts/${post.id}`}>{post.title}</Link>
 			</h1>
 		);
 	});

@@ -19,7 +19,7 @@ export function Post() {
 			<h3 className='comments-title'>Comments</h3>
 			<section>
 				<CommentForm loading={loading} error={error} onSubmit={onCommentCreated} />
-				{post.comments != null && rootComments.length > 0 && (
+				{rootComments != null && rootComments.length > 0 && (
 					<div className='mt-4'>
 						<CommentList comments={rootComments} />
 					</div>

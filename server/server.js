@@ -85,7 +85,7 @@ app.put('/posts/:postId/comments/:commentId', async (req, res) => {
 	}
 
 	const { userId } = await prisma.comment.findUnique({
-		where: { id: req.params.id },
+		where: { id: req.params.commentId },
 		select: { userId: true },
 	});
 
@@ -100,7 +100,7 @@ app.put('/posts/:postId/comments/:commentId', async (req, res) => {
 
 app.delete('/posts/:postId/comments/:commentId', async (req, res) => {
 	const { userId } = await prisma.comment.findUnique({
-		where: { id: req.params.id },
+		where: { id: req.params.commentId },
 		select: { userId: true },
 	});
 

@@ -1,5 +1,5 @@
 import { IconBtn } from './IconBtn';
-import { FaHeart, FaReply, FaEdit, FaTrash } from 'react-icon/fa';
+import { FaHeart, FaReply, FaEdit, FaTrash } from 'react-icons/fa';
 import { usePost } from '../contexts/PostContext';
 import { CommentList } from './CommentList';
 import { useState } from 'react';
@@ -29,14 +29,14 @@ export function Comment({ id, message, user, createdAt }) {
 	}
 
 	function onCommentUpdate(message) {
-		return updateCommentFn.execute({ postId: post.id, id }).then((comment) => {
+		return updateCommentFn.execute({ postId: post.id, message, id }).then((comment) => {
 			setIsEditing(false);
 			updateLocalComment(id, comment.message);
 		});
 	}
 
 	function onCommentDelete() {
-		return deleteCommentFn.execute({ postId: post.id, message, id }).then((comment) => deleteLocalComment(comment.id));
+		return deleteCommentFn.execute({ postId: post.id, id }).then((comment) => deleteLocalComment(comment.id));
 	}
 
 	return (
